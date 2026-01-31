@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html class="light" lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vira Burger &amp; Grill Menu</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Outfit:wght@300;400;600;700&amp;family=Material+Icons+Round&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F39C12",
+                        secondary: "#C0392B",
+                        "background-light": "#FDFCF0",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        display: ["Bebas Neue", "cursive"],
+                        body: ["Outfit", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .paper-texture {
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none
+        }
+
+        /* Hero section - scrolls naturally */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Logo container - animates based on scroll */
+        .logo-container {
+            will-change: transform, width, height;
+            transition: none;
+        }
+
+        .logo-container.large {
+            width: 16rem;
+            height: 16rem;
+        }
+
+        .logo-container.small {
+            width: 8rem;
+            height: 8rem;
+        }
+
+        .scroll-arrow {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(6px);
+            color: #111827;
+            /*box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);*/
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .scroll-arrow:hover {
+            transform: translateX(-50%) translateY(2px);
+        }
+
+        .order-link {
+            transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        .order-link.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .order-link:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        .order-link:active {
+            filter: brightness(0.95);
+            transform: translateY(1px);
+        }
+
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 60;
+        }
+
+        .image-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .image-modal__content {
+            max-width: min(90vw, 720px);
+            max-height: 85vh;
+            background: white;
+            border-radius: 16px;
+            padding: 0.75rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .image-modal__img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        /* Sticky header */
+        .header-section {
+            background: linear-gradient(to bottom, rgb(243 156 18) 0%, rgb(243 156 18) 50%, transparent 100%);
+        }
+
+        /* Logo overflows into content */
+        .logo-overflow {
+            transform: translateY(30%);
+            position: relative;
+            z-index: 40;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="font-body bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen pb-24">
+    <!-- Hero section with centered logo -->
+    <div id="hero" class="hero-section">
+        <div id="logo-container" class="logo-container large rounded-full flex items-center justify-center p-3">
+            <img alt="Vira Burger Logo" class="w-full h-full object-contain"
+                src="assets/vira_burger_logo-transformed.png" />
+        </div>
+        <button id="scroll-to-menu" class="scroll-arrow" aria-label="Menüye kaydır">
+            <span class="material-icons-round">keyboard_arrow_down</span>
+        </button>
+    </div>
+
+    <!-- Sticky header with logo after scroll -->
+    <header id="sticky-header" class="header-section sticky top-0 z-30 pt-0 pb-4 px-6 opacity-0 pointer-events-none">
+        <div class="relative flex flex-col items-center">
+            <div id="sticky-logo" class="logo-container small logo-overflow rounded-full flex items-center justify-center p-1">
+                <img alt="Vira Burger Logo" class="w-full h-full object-contain"
+                    src="assets/vira_burger_logo-transformed.png" />
+            </div>
+        </div>
+    </header>
+
+    <main id="menu-content" class="px-6 pt-8 space-y-10 paper-texture relative max-w-2xl mx-auto lg:max-w-3xl">
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <span class="material-icons-round text-secondary">restaurant</span>
+                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">ET BURGERLER</h2>
+            </div>
+            <div class="space-y-8">
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3
+                                class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                KLAS BURGER</h3>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺350</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            110g dana köfte, burger ekmeği, cheddar peyniri, karamelize soğan, patates kızartması.
+                        </p>
+
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
+                        <img alt="Klas Burger" class="w-full h-full object-cover" src="assets/klas_burger.webp" />
+                    </div>
+                </div>
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3
+                                class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                MANTAR BURGER</h3>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺360</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            110g dana köfte, burger ekmeği, cheddar peyniri, karamelize soğan, sotelenmiş mantar, karabiber sos, patates kızartması.
+                        </p>
+
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
+                        <img alt="Mantar Burger" class="w-full h-full object-cover" src="assets/manter_burger.webp" />
+                    </div>
+                </div>
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-1">
+                                <h3
+                                    class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                    VİRA BURGER</h3>
+                                <span class="material-icons-round text-sm text-primary">sailing</span>
+                            </div>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺380</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            110g dana köfte, cheddar peyniri, füme antrikot, közlenmiş kapya, chipotle relish sos, patates kızartması.
+                        </p>
+
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary">
+                        <img alt="Vira Burger Signature" class="w-full h-full object-cover"
+                            src="assets/vira_burger.webp" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <span class="material-icons-round text-secondary">set_meal</span>
+                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">TAVUK BURGERLER</h2>
+            </div>
+            <div class="space-y-8">
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-display text-2xl text-slate-800 dark:text-white">ÇITIR TAVUK BURGER</h3>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺300</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            140g çıtır tavuk göğsü, burger ekmeği, iceberg marul, cheddar peyniri, karabiber sos, patates kızartması.
+                        </p>
+
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
+                        <img alt="Chicken Burger" class="w-full h-full object-cover"
+                            src="assets/çıtır_tavuk_burger.webp" />
+                    </div>
+                </div>
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-display text-2xl text-slate-800 dark:text-white">BUFFALO TAVUK BURGER</h3>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺320</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            140g çıtır tavuk göğsü, burger ekmeği, iceberg marul, buffalo sos, barbekü sos, patates kızartması.
+                        </p>
+
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
+                        <img alt="Buffalo Burger" class="w-full h-full object-cover" src="assets/buffalo_burger.webp" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-secondary rounded-3xl p-6 text-white shadow-2xl transform -rotate-1 relative mb-12">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-12 h-6 bg-white/30 rounded-full blur-md">
+            </div>
+            <h2 class="font-display text-3xl mb-4 border-b border-white/20 pb-2">YAN LEZZETLER</h2>
+            <ul class="space-y-4 font-display text-xl">
+                <li class="flex justify-between items-center">
+                    <span>PATATES KIZARTMASI</span>
+                    <span>₺80</span>
+                </li>
+                <li class="flex justify-between items-center text-sm opacity-80 -mt-3 italic font-body">
+                    <span>+ Trüf &amp; Parmesan</span>
+                    <span>+30₺</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <span>TENDER (ADET)</span>
+                    <span>₺70</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <span>3'LÜ TENDER</span>
+                    <span>₺180</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <span>EL YAPIMI SOĞAN HALKASI</span>
+                    <span>₺60</span>
+                </li>
+                <li class="mt-4">
+                    <img alt="Soslar" class="w-full object-contain rounded-xl shadow-md border-2 border-white/20"
+                        src="assets/soslar.webp" />
+                </li>
+            </ul>
+        </section>
+        <div class="py-6 border-t border-slate-200 dark:border-zinc-800">
+            <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mb-6">
+                Sipariş Kanalları</p>
+            <div class="grid grid-cols-4 gap-4 items-center opacity-80 grayscale hover:grayscale-0 transition-all">
+                <button type="button" class="order-link h-10 bg-rose-500 rounded flex items-center justify-center p-2 grayscale hover:grayscale" aria-label="Yemeksepeti">
+                    <span class="text-[10px] font-bold text-white leading-none text-center">Yemek sepeti</span>
+                </button>
+                <a class="order-link h-10 bg-purple-600 rounded flex items-center justify-center p-2" href="https://getir.com/yemek/restoran/vira-burger-orhantepe-mah-kartal-istanbul" target="_blank" rel="noopener noreferrer" aria-label="Getir">
+                    <span class="text-[10px] font-bold text-white leading-none text-center">Getir</span>
+                </a>
+                <button type="button" class="order-link h-10 bg-orange-500 rounded flex items-center justify-center p-2 grayscale hover:grayscale" aria-label="Trendyol Go">
+                    <span class="text-[10px] font-bold text-white leading-none text-center">Trendyol Go</span>
+                </button>
+                <button type="button" class="order-link h-10 bg-red-600 rounded flex items-center justify-center p-2 grayscale hover:grayscale" aria-label="Migros Yemek">
+                    <span class="text-[10px] font-bold text-white leading-none text-center">Migros Yemek</span>
+                </button>
+            </div>
+        </div>
+        <footer class="text-center pb-12">
+            <div class="flex justify-center gap-4 mb-4">
+                <a class="text-slate-400 hover:text-primary" href="https://www.instagram.com/viraburger34" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M16.5 7.5v.01" /></svg>
+                </a>
+                <a class="text-slate-400 hover:text-primary" href="https://maps.app.goo.gl/atH8aKhCi3EbmsZN7" target="_blank" rel="noopener noreferrer" aria-label="Konum">
+                    <span class="material-icons-round">location_on</span>
+                </a>
+            </div>
+            <p class="text-xs text-slate-400">Doğa Sk. Orhantepe Mh. No 5 Kartal / İstanbul</p>
+            <p class="text-[10px] text-slate-300 dark:text-zinc-700 mt-4">*Görseller orijinal burgerlerimizdir</p>
+        </footer>
+    </main>
+    <button
+        class="fixed top-6 right-6 z-50 p-2 bg-white/50 dark:bg-zinc-800/50 backdrop-blur rounded-full text-slate-600 dark:text-slate-300 shadow-lg border border-white/20"
+        onclick="document.documentElement.classList.toggle('dark')">
+        <span class="material-icons-round block dark:hidden">dark_mode</span>
+        <span class="material-icons-round hidden dark:block">light_mode</span>
+    </button>
+
+    <div id="image-modal" class="image-modal" aria-hidden="true">
+        <div class="image-modal__content" role="dialog" aria-modal="true">
+            <img id="image-modal-img" class="image-modal__img" alt="" />
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll-based logo animation
+        const hero = document.getElementById('hero');
+        const logoContainer = document.getElementById('logo-container');
+        const stickyHeader = document.getElementById('sticky-header');
+        const menuContent = document.getElementById('menu-content');
+        
+        const heroHeight = window.innerHeight;
+        const logoStartSize = 256; // 16rem = 256px
+        const logoEndSize = 80; // 5rem = 80px
+        const scrollThreshold = heroHeight; // When to complete the transition
+        
+        let isAutoScrolling = false;
+        let hasTriggeredScroll = false;
+        
+        function updateOnScroll() {
+            const scrollY = window.scrollY;
+            const progress = Math.min(scrollY / scrollThreshold, 1);
+            
+            // Interpolate logo size
+            const currentSize = logoStartSize - (logoStartSize - logoEndSize) * progress;
+            logoContainer.style.width = currentSize + 'px';
+            logoContainer.style.height = currentSize + 'px';
+            
+            // Move logo up as we scroll (stays in view longer)
+            const logoTranslateY = -scrollY * 0.5;
+            logoContainer.style.transform = `translateY(${logoTranslateY}px)`;
+            
+            // Fade in sticky header as hero scrolls away
+            if (progress > 0.8) {
+                const headerOpacity = (progress - 0.8) / 0.2;
+                stickyHeader.style.opacity = headerOpacity;
+                stickyHeader.style.pointerEvents = headerOpacity > 0.5 ? 'auto' : 'none';
+            } else {
+                stickyHeader.style.opacity = 0;
+                stickyHeader.style.pointerEvents = 'none';
+            }
+            
+            // Hide hero logo when sticky is fully visible
+            if (progress >= 1) {
+                logoContainer.style.opacity = 0;
+            } else {
+                logoContainer.style.opacity = 1;
+            }
+            
+            // Reset trigger when scrolled back to top
+            if (scrollY === 0) {
+                hasTriggeredScroll = false;
+            }
+        }
+        
+        // Auto-scroll when user starts scrolling down from hero
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function smoothScrollTo(targetY, duration = 700) {
+            const startY = window.scrollY;
+            const startTime = performance.now();
+
+            function step(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeInOutCubic(progress);
+                const newY = startY + (targetY - startY) * eased;
+
+                window.scrollTo(0, newY);
+                updateOnScroll();
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    isAutoScrolling = false;
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        function triggerAutoScroll() {
+            if (isAutoScrolling || hasTriggeredScroll) return;
+            isAutoScrolling = true;
+            hasTriggeredScroll = true;
+
+            // Smooth scroll to the menu
+            smoothScrollTo(scrollThreshold, 700);
+        }
+
+        const scrollButton = document.getElementById('scroll-to-menu');
+        if (scrollButton) {
+            scrollButton.addEventListener('click', () => {
+                triggerAutoScroll();
+            });
+        }
+
+        const imageModal = document.getElementById('image-modal');
+        const imageModalImg = document.getElementById('image-modal-img');
+
+        function openImageModal(src, alt) {
+            imageModalImg.src = src;
+            imageModalImg.alt = alt || '';
+            imageModal.classList.add('open');
+            imageModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeImageModal() {
+            imageModal.classList.remove('open');
+            imageModal.setAttribute('aria-hidden', 'true');
+            imageModalImg.src = '';
+        }
+
+        if (imageModal) {
+            imageModal.addEventListener('click', (event) => {
+                if (event.target === imageModal) {
+                    closeImageModal();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        const previewImages = document.querySelectorAll('#menu-content img');
+        previewImages.forEach((img) => {
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', () => {
+                openImageModal(img.src, img.alt);
+            });
+        });
+        
+        // Detect scroll intent via wheel
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0 && window.scrollY <= 1 && !hasTriggeredScroll) {
+                triggerAutoScroll();
+            }
+        }, { passive: true });
+        
+        // Touch support for mobile
+        let touchStartY = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        window.addEventListener('touchmove', (e) => {
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchStartY - touchY;
+            if (deltaY > 20 && window.scrollY <= 1 && !hasTriggeredScroll) {
+                triggerAutoScroll();
+            }
+        }, { passive: true });
+        
+        window.addEventListener('scroll', () => {
+            updateOnScroll();
+
+            // If the user starts scrolling down from the hero, snap to menu smoothly
+            if (!hasTriggeredScroll && window.scrollY > 2 && window.scrollY < scrollThreshold) {
+                triggerAutoScroll();
+            }
+        }, { passive: true });
+        
+        // Initial call
+        updateOnScroll();
+    </script>
+
+</body>
+
+</html>
