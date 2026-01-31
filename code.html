@@ -41,7 +41,7 @@
 
         /* Hero section - scrolls naturally */
         .hero-section {
-            height: 100vh;
+            height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,7 +125,7 @@
 
         .image-modal__content {
             max-width: min(90vw, 720px);
-            max-height: 85vh;
+            max-height: 85dvh;
             background: white;
             border-radius: 16px;
             padding: 0.75rem;
@@ -135,7 +135,7 @@
         .image-modal__img {
             width: 100%;
             height: auto;
-            max-height: 80vh;
+            max-height: 80dvh;
             object-fit: contain;
             border-radius: 12px;
         }
@@ -367,17 +367,21 @@
         const logoContainer = document.getElementById('logo-container');
         const stickyHeader = document.getElementById('sticky-header');
         const menuContent = document.getElementById('menu-content');
-        
-        const heroHeight = window.innerHeight;
+
+        // Use dynamic viewport height to handle mobile browser UI changes
+        function getViewportHeight() {
+            return window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        }
+
         const logoStartSize = 256; // 16rem = 256px
         const logoEndSize = 80; // 5rem = 80px
-        const scrollThreshold = heroHeight; // When to complete the transition
         
         let isAutoScrolling = false;
         let hasTriggeredScroll = false;
         
         function updateOnScroll() {
             const scrollY = window.scrollY;
+            const scrollThreshold = getViewportHeight();
             const progress = Math.min(scrollY / scrollThreshold, 1);
             
             // Interpolate logo size
@@ -417,7 +421,7 @@
             return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
 
-        function smoothScrollTo(targetY, duration = 700) {
+        function smoothScrollTo(getTargetY, duration = 700) {
             const startY = window.scrollY;
             const startTime = performance.now();
 
@@ -425,6 +429,8 @@
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const eased = easeInOutCubic(progress);
+                // Recalculate target each frame to handle dynamic viewport changes
+                const targetY = typeof getTargetY === 'function' ? getTargetY() : getTargetY;
                 const newY = startY + (targetY - startY) * eased;
 
                 window.scrollTo(0, newY);
@@ -445,8 +451,8 @@
             isAutoScrolling = true;
             hasTriggeredScroll = true;
 
-            // Smooth scroll to the menu
-            smoothScrollTo(scrollThreshold, 700);
+            // Smooth scroll to the menu - use dynamic viewport height
+            smoothScrollTo(() => getViewportHeight(), 700);
         }
 
         const scrollButton = document.getElementById('scroll-to-menu');
@@ -519,7 +525,7 @@
             updateOnScroll();
 
             // If the user starts scrolling down from the hero, snap to menu smoothly
-            if (!hasTriggeredScroll && window.scrollY > 2 && window.scrollY < scrollThreshold) {
+            if (!hasTriggeredScroll && window.scrollY > 2 && window.scrollY < getViewportHeight()) {
                 triggerAutoScroll();
             }
         }, { passive: true });
