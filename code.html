@@ -183,140 +183,13 @@
     </header>
 
     <main id="menu-content" class="px-6 pt-8 space-y-10 paper-texture relative max-w-2xl mx-auto lg:max-w-3xl">
-        <section>
-            <div class="flex items-center gap-2 mb-6">
-                <span class="material-icons-round text-secondary">restaurant</span>
-                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">ET BURGERLER</h2>
+        <div id="dynamic-menu-container" class="space-y-10">
+            <div class="flex justify-center items-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
             </div>
-            <div class="space-y-8">
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3
-                                class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
-                                KLAS BURGER</h3>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺350</span>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                            110g dana köfte, burger ekmeği, cheddar peyniri, karamelize soğan, patates kızartması.
-                        </p>
+        </div>
 
-                    </div>
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
-                        <img alt="Klas Burger" class="w-full h-full object-cover" src="assets/klas_burger.webp" />
-                    </div>
-                </div>
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3
-                                class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
-                                MANTAR BURGER</h3>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺360</span>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                            110g dana köfte, burger ekmeği, cheddar peyniri, karamelize soğan, sotelenmiş mantar, karabiber sos, patates kızartması.
-                        </p>
 
-                    </div>
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
-                        <img alt="Mantar Burger" class="w-full h-full object-cover" src="assets/manter_burger.webp" />
-                    </div>
-                </div>
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <div class="flex items-center gap-1">
-                                <h3
-                                    class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
-                                    VİRA BURGER</h3>
-                                <span class="material-icons-round text-sm text-primary">sailing</span>
-                            </div>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺380</span>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                            110g dana köfte, cheddar peyniri, füme antrikot, közlenmiş kapya, chipotle relish sos, patates kızartması.
-                        </p>
-
-                    </div>
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary">
-                        <img alt="Vira Burger Signature" class="w-full h-full object-cover"
-                            src="assets/vira_burger.webp" />
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section>
-            <div class="flex items-center gap-2 mb-6">
-                <span class="material-icons-round text-secondary">set_meal</span>
-                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">TAVUK BURGERLER</h2>
-            </div>
-            <div class="space-y-8">
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-display text-2xl text-slate-800 dark:text-white">ÇITIR TAVUK BURGER</h3>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺300</span>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                            140g çıtır tavuk göğsü, burger ekmeği, iceberg marul, cheddar peyniri, karabiber sos, patates kızartması.
-                        </p>
-
-                    </div>
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
-                        <img alt="Chicken Burger" class="w-full h-full object-cover"
-                            src="assets/çıtır_tavuk_burger.webp" />
-                    </div>
-                </div>
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-display text-2xl text-slate-800 dark:text-white">BUFFALO TAVUK BURGER</h3>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺320</span>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                            140g çıtır tavuk göğsü, burger ekmeği, iceberg marul, buffalo sos, barbekü sos, patates kızartması.
-                        </p>
-
-                    </div>
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
-                        <img alt="Buffalo Burger" class="w-full h-full object-cover" src="assets/buffalo_burger.webp" />
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="bg-secondary rounded-3xl p-6 text-white shadow-2xl transform -rotate-1 relative mb-12">
-            <div
-                class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-12 h-6 bg-white/30 rounded-full blur-md">
-            </div>
-            <h2 class="font-display text-3xl mb-4 border-b border-white/20 pb-2">YAN LEZZETLER</h2>
-            <ul class="space-y-4 font-display text-xl">
-                <li class="flex justify-between items-center">
-                    <span>PATATES KIZARTMASI</span>
-                    <span>₺80</span>
-                </li>
-                <li class="flex justify-between items-center text-sm opacity-80 -mt-3 italic font-body">
-                    <span>+ Trüf &amp; Parmesan</span>
-                    <span>+30₺</span>
-                </li>
-                <li class="flex justify-between items-center">
-                    <span>TENDER (ADET)</span>
-                    <span>₺70</span>
-                </li>
-                <li class="flex justify-between items-center">
-                    <span>3'LÜ TENDER</span>
-                    <span>₺180</span>
-                </li>
-                <li class="flex justify-between items-center">
-                    <span>EL YAPIMI SOĞAN HALKASI</span>
-                    <span>₺60</span>
-                </li>
-                <li class="mt-4">
-                    <img alt="Soslar" class="w-full object-contain rounded-xl shadow-md border-2 border-white/20"
-                        src="assets/soslar.webp" />
-                </li>
-            </ul>
-        </section>
         <div class="py-6 border-t border-slate-200 dark:border-zinc-800">
             <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mb-6">
                 Sipariş Kanalları</p>
@@ -532,6 +405,142 @@
         
         // Initial call
         updateOnScroll();
+
+        // Menu Data Fetching
+        const PB_URL = 'https://pocketbase.viraburger.com';
+
+        async function loadMenu() {
+            const container = document.getElementById('dynamic-menu-container');
+            if (!container) return;
+
+            try {
+                const [catRes, itemRes] = await Promise.all([
+                    fetch(`${PB_URL}/api/collections/menu_categories/records?sort=order`),
+                    fetch(`${PB_URL}/api/collections/menu_items/records?perPage=500`)
+                ]);
+
+                if (!catRes.ok || !itemRes.ok) throw new Error('Failed to fetch data');
+
+                const catData = await catRes.json();
+                const itemData = await itemRes.json();
+
+                const categories = catData.items;
+                const items = itemData.items;
+
+                let html = '';
+
+                const imageMap = {
+                    "KLAS BURGER": "assets/klas_burger.webp",
+                    "MANTAR BURGER": "assets/manter_burger.webp",
+                    "VİRA BURGER": "assets/vira_burger.webp",
+                    "ÇITIR TAVUK BURGER": "assets/çıtır_tavuk_burger.webp",
+                    "BUFFALO TAVUK BURGER": "assets/buffalo_burger.webp"
+                };
+
+                const iconMap = {
+                    "ET BURGERLER": "restaurant",
+                    "TAVUK BURGERLER": "set_meal"
+                };
+
+                categories.forEach(category => {
+                    const categoryItems = items.filter(i => i.category === category.id);
+                    if (categoryItems.length === 0) return;
+
+                    if (category.name === "YAN LEZZETLER") {
+                        let itemsHtml = categoryItems.map(item => {
+                            const ingHtml = (item.ingredients && item.ingredients.length > 0) 
+                                ? `<li class="flex justify-between items-center text-sm opacity-80 -mt-3 italic font-body"><span>+ ${item.ingredients.join(', ')}</span></li>`
+                                : '';
+                            return `
+                                <li class="flex justify-between items-center">
+                                    <span>${item.name}</span>
+                                    <span>₺${item.price}</span>
+                                </li>
+                                ${ingHtml}
+                            `;
+                        }).join('');
+                        
+                        html += `
+        <section class="bg-secondary rounded-3xl p-6 text-white shadow-2xl transform -rotate-1 relative mb-12">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-12 h-6 bg-white/30 rounded-full blur-md"></div>
+            <h2 class="font-display text-3xl mb-4 border-b border-white/20 pb-2">${category.name}</h2>
+            <ul class="space-y-4 font-display text-xl">
+                ${itemsHtml}
+                <li class="mt-4">
+                    <img alt="Soslar" class="w-full object-contain rounded-xl shadow-md border-2 border-white/20" src="assets/soslar.webp" />
+                </li>
+            </ul>
+        </section>`;
+                    } else {
+                        const catIcon = iconMap[category.name] || "restaurant";
+                        let itemsHtml = categoryItems.map(item => {
+                            const iconHtml = item.name === 'VİRA BURGER' ? `<span class="material-icons-round text-sm text-primary">sailing</span>` : '';
+                            const borderColor = item.name === 'VİRA BURGER' ? 'border-primary' : 'border-primary/20';
+                            const imgHtml = imageMap[item.name] ? `
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 ${borderColor} shrink-0">
+                        <img alt="${item.name}" class="w-full h-full object-cover" src="${imageMap[item.name]}" />
+                    </div>` : '';
+                            
+                            const ingHtml = (item.ingredients && item.ingredients.length > 0)
+                                ? `<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${item.ingredients.join(', ')}</p>`
+                                : '';
+
+                            return `
+                <div class="flex gap-4 group">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-1">
+                                <h3 class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                    ${item.name}
+                                </h3>
+                                ${iconHtml}
+                            </div>
+                            <span class="font-display text-2xl text-secondary dark:text-primary">₺${item.price}</span>
+                        </div>
+                        ${ingHtml}
+                    </div>
+                    ${imgHtml}
+                </div>`;
+                        }).join('');
+
+                        html += `
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <span class="material-icons-round text-secondary">${catIcon}</span>
+                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">${category.name}</h2>
+            </div>
+            <div class="space-y-8">
+                ${itemsHtml}
+            </div>
+        </section>`;
+                    }
+                });
+
+                container.innerHTML = html;
+
+                // Re-attach image modal listeners
+                const previewImages = container.querySelectorAll('img');
+                previewImages.forEach((img) => {
+                    if (img.alt !== 'Soslar') {
+                        img.style.cursor = 'zoom-in';
+                        img.addEventListener('click', () => {
+                            openImageModal(img.src, img.alt);
+                        });
+                    }
+                });
+
+            } catch (err) {
+                console.error('Error fetching menu:', err);
+                container.innerHTML = `
+                    <div class="p-6 text-center text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                        <span class="material-icons-round text-4xl mb-2">error_outline</span>
+                        <p>Menü yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMenu);
     </script>
 
 </body>
