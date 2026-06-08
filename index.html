@@ -163,6 +163,16 @@
     class="font-body bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen pb-24">
     <!-- Hero section with centered logo -->
     <div id="hero" class="hero-section">
+        <!-- Restaurant Switcher -->
+        <div id="restaurant-switcher" class="absolute top-8 sm:top-12 left-1/2 -translate-x-1/2 flex bg-white/50 dark:bg-zinc-800/50 backdrop-blur-md p-1.5 rounded-full border border-white/40 dark:border-zinc-700/50 shadow-lg z-50 transition-opacity duration-500 opacity-0">
+            <a href="?r=vira_burger" id="switch-vira_burger" class="px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-display tracking-wide transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary">
+                Burger
+            </a>
+            <a href="?r=vira_pilav" id="switch-vira_pilav" class="px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-display tracking-wide transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary">
+                Pilav
+            </a>
+        </div>
+
         <div id="logo-container" class="logo-container large rounded-full flex items-center justify-center p-3">
             <img alt="Vira Burger Logo" class="w-full h-full object-contain"
                 src="assets/vira_burger_logo-transformed.png" />
@@ -413,120 +423,157 @@
             const container = document.getElementById('dynamic-menu-container');
             if (!container) return;
 
+            const urlParams = new URLSearchParams(window.location.search);
+            let slug = urlParams.get('r');
+
+            if (!slug) {
+                slug = 'vira_burger';
+                // Optional: Update the URL without reloading the page
+                window.history.replaceState({}, '', '?r=' + slug);
+            }
+
+            // Initialize Switcher
+            const switcher = document.getElementById('restaurant-switcher');
+            if (switcher) {
+                const activeBtn = document.getElementById(`switch-${slug}`);
+                if (activeBtn) {
+                    activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:text-primary', 'dark:hover:text-primary');
+                    activeBtn.classList.add('bg-primary', 'text-white', 'shadow-md');
+                }
+                switcher.classList.remove('opacity-0');
+            }
+
             try {
-                const [catRes, itemRes] = await Promise.all([
-                    fetch(`${PB_URL}/api/collections/menu_categories/records?sort=order`),
-                    fetch(`${PB_URL}/api/collections/menu_items/records?perPage=500`)
-                ]);
+                const safeSlug = String(slug).replace(/"/g, '\\"');
+                const restRes = await fetch(`${PB_URL}/api/collections/restaurants/records?filter=(slug="${encodeURIComponent(safeSlug)}")`);
+                
+                if (!restRes.ok) {
+                    throw new Error('Failed to fetch restaurant');
+                }
+                
+                const restData = await restRes.json();
 
-                if (!catRes.ok || !itemRes.ok) throw new Error('Failed to fetch data');
+                if (!restData.items || restData.items.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-6 text-center text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                            <span class="material-icons-round text-4xl mb-2">qr_code_scanner</span>
+                            <p>QR kodu geçersiz. Lütfen masadaki karekodu tarayın.</p>
+                        </div>
+                    `;
+                    return;
+                }
 
+                const restaurant = restData.items[0];
+
+                // Update document title dynamically to exactly the restaurant name
+                document.title = restaurant.name;
+
+                const catRes = await fetch(`${PB_URL}/api/collections/menu_categories/records?sort=order&filter=(restaurant="${restaurant.id}")`);
+                
+                if (!catRes.ok) throw new Error('Failed to fetch categories');
+                
                 const catData = await catRes.json();
-                const itemData = await itemRes.json();
-
                 const categories = catData.items;
+
+                if (categories.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-6 text-center text-slate-500 bg-slate-50 dark:bg-slate-900/20 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <span class="material-icons-round text-4xl mb-2">restaurant</span>
+                            <p>Menü yakında hazır.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const itemsFilter = categories.map(c => `category="${c.id}"`).join(' || ');
+                const itemRes = await fetch(`${PB_URL}/api/collections/menu_items/records?perPage=500&filter=(${encodeURIComponent(itemsFilter)})`);
+                
+                if (!itemRes.ok) throw new Error('Failed to fetch items');
+                
+                const itemData = await itemRes.json();
                 const items = itemData.items;
 
                 let html = '';
 
-                const imageMap = {
-                    "KLAS BURGER": "assets/klas_burger.webp",
-                    "MANTAR BURGER": "assets/manter_burger.webp",
-                    "VİRA BURGER": "assets/vira_burger.webp",
-                    "ÇITIR TAVUK BURGER": "assets/çıtır_tavuk_burger.webp",
-                    "BUFFALO TAVUK BURGER": "assets/buffalo_burger.webp"
-                };
+                // Optional: Update top header visually to show restaurant name
+                html += `<h1 class="font-display text-4xl text-center mb-8 text-primary">${restaurant.name}</h1>`;
 
                 const iconMap = {
                     "ET BURGERLER": "restaurant",
-                    "TAVUK BURGERLER": "set_meal"
+                    "TAVUK BURGERLER": "set_meal",
+                    "PİLAVLAR": "rice_bowl",
+                    "İÇECEKLER": "local_drink",
+                    "TATLILAR": "icecream"
                 };
+
+                function getImageUrl(record, thumb = '') {
+                    if (!record || !record.image) return '';
+                    let url = `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.image}`;
+                    if (thumb) {
+                        url += `?thumb=${thumb}`;
+                    }
+                    return url;
+                }
 
                 categories.forEach(category => {
                     const categoryItems = items.filter(i => i.category === category.id);
                     if (categoryItems.length === 0) return;
 
-                    if (category.name === "YAN LEZZETLER") {
-                        let itemsHtml = categoryItems.map(item => {
-                            const ingHtml = (item.ingredients && item.ingredients.length > 0) 
-                                ? `<li class="flex justify-between items-center text-sm opacity-80 -mt-3 italic font-body"><span>+ ${item.ingredients.join(', ')}</span></li>`
-                                : '';
-                            return `
-                                <li class="flex justify-between items-center">
-                                    <span>${item.name}</span>
-                                    <span>₺${item.price}</span>
-                                </li>
-                                ${ingHtml}
-                            `;
-                        }).join('');
+                    const catIcon = iconMap[category.name] || "restaurant";
+                    
+                    let itemsHtml = categoryItems.map(item => {
+                        const borderColor = 'border-primary/20';
+                        const thumbUrl = getImageUrl(item, '100x100');
+                        const fullUrl = getImageUrl(item); // Original full quality
                         
-                        html += `
-        <section class="bg-secondary rounded-3xl p-6 text-white shadow-2xl transform -rotate-1 relative mb-12">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-12 h-6 bg-white/30 rounded-full blur-md"></div>
-            <h2 class="font-display text-3xl mb-4 border-b border-white/20 pb-2">${category.name}</h2>
-            <ul class="space-y-4 font-display text-xl">
-                ${itemsHtml}
-                <li class="mt-4">
-                    <img alt="Soslar" class="w-full object-contain rounded-xl shadow-md border-2 border-white/20" src="assets/soslar.webp" />
-                </li>
-            </ul>
-        </section>`;
-                    } else {
-                        const catIcon = iconMap[category.name] || "restaurant";
-                        let itemsHtml = categoryItems.map(item => {
-                            const iconHtml = item.name === 'VİRA BURGER' ? `<span class="material-icons-round text-sm text-primary">sailing</span>` : '';
-                            const borderColor = item.name === 'VİRA BURGER' ? 'border-primary' : 'border-primary/20';
-                            const imgHtml = imageMap[item.name] ? `
-                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 ${borderColor} shrink-0">
-                        <img alt="${item.name}" class="w-full h-full object-cover" src="${imageMap[item.name]}" />
-                    </div>` : '';
-                            
-                            const ingHtml = (item.ingredients && item.ingredients.length > 0)
-                                ? `<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${item.ingredients.join(', ')}</p>`
-                                : '';
+                        const imgHtml = item.image ? `
+                <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 ${borderColor} shrink-0 bg-slate-100 dark:bg-zinc-800">
+                    <img alt="${item.name}" class="w-full h-full object-cover" src="${thumbUrl}" data-full-src="${fullUrl}" loading="lazy" decoding="async" />
+                </div>` : '<div class="w-24 shrink-0"></div>';
+                        
+                        const ingHtml = (item.ingredients && Array.isArray(item.ingredients) && item.ingredients.length > 0)
+                            ? `<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${item.ingredients.join(', ')}</p>`
+                            : '';
 
-                            return `
-                <div class="flex gap-4 group">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1">
-                            <div class="flex items-center gap-1">
-                                <h3 class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
-                                    ${item.name}
-                                </h3>
-                                ${iconHtml}
-                            </div>
-                            <span class="font-display text-2xl text-secondary dark:text-primary">₺${item.price}</span>
+                        return `
+            <div class="flex gap-4 group">
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <div class="flex items-center gap-1">
+                            <h3 class="font-display text-2xl text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                ${item.name}
+                            </h3>
                         </div>
-                        ${ingHtml}
+                        <span class="font-display text-2xl text-secondary dark:text-primary whitespace-nowrap ml-2">₺${item.price}</span>
                     </div>
-                    ${imgHtml}
-                </div>`;
-                        }).join('');
+                    ${ingHtml}
+                </div>
+                ${imgHtml}
+            </div>`;
+                    }).join('');
 
-                        html += `
-        <section>
-            <div class="flex items-center gap-2 mb-6">
-                <span class="material-icons-round text-secondary">${catIcon}</span>
-                <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">${category.name}</h2>
-            </div>
-            <div class="space-y-8">
-                ${itemsHtml}
-            </div>
-        </section>`;
-                    }
+                    html += `
+    <section>
+        <div class="flex items-center gap-2 mb-6">
+            <span class="material-icons-round text-secondary">${catIcon}</span>
+            <h2 class="font-display text-3xl text-secondary dark:text-orange-500 tracking-wide">${category.name}</h2>
+        </div>
+        <div class="space-y-8">
+            ${itemsHtml}
+        </div>
+    </section>`;
                 });
 
                 container.innerHTML = html;
 
-                // Re-attach image modal listeners
+                // Re-attach image modal listeners for dynamic images
                 const previewImages = container.querySelectorAll('img');
                 previewImages.forEach((img) => {
-                    if (img.alt !== 'Soslar') {
-                        img.style.cursor = 'zoom-in';
-                        img.addEventListener('click', () => {
-                            openImageModal(img.src, img.alt);
-                        });
-                    }
+                    img.style.cursor = 'zoom-in';
+                    img.addEventListener('click', () => {
+                        // Use data-full-src for high-quality, fallback to src
+                        openImageModal(img.dataset.fullSrc || img.src, img.alt);
+                    });
                 });
 
             } catch (err) {
@@ -534,7 +581,8 @@
                 container.innerHTML = `
                     <div class="p-6 text-center text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
                         <span class="material-icons-round text-4xl mb-2">error_outline</span>
-                        <p>Menü yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
+                        <p>Menü yüklenirken bir hata oluştu. Lütfen tekrar deneyin.</p>
+                        <button onclick="loadMenu()" class="mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/40 rounded-lg font-bold text-sm hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors">Tekrar Dene</button>
                     </div>
                 `;
             }
